@@ -1,0 +1,20 @@
+# Datos pesados (no deben subirse a git)
+*.csv
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Empaquetado de Lambda (se genera automáticamente)
+lambda/lambda_package.zip
+terraform/modules/lambda-drift-check/lambda_package.zip
+
+# Entorno
+.env

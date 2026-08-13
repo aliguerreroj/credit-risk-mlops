@@ -1,0 +1,1 @@
+{"binary_classification_metrics": {"auc": {"value": 0.7567018138252211, "standard_deviation": "NaN"}, "recall": {"value": 0.6737160120845922, "standard_deviation": "NaN"}, "precision": {"value": 0.16822570911285456, "standard_deviation": "NaN"}}}
