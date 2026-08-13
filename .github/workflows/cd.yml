@@ -1,0 +1,57 @@
+# NOTA: Este workflow está diseñado y listo para producción, pero no se
+# activa con credenciales reales en este proyecto de portafolio, para
+# evitar cualquier aplicación accidental de cambios en la cuenta AWS.
+# Requiere configurar los secrets AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY
+# y el environment "production-approval" para activarse.
+
+name: CD - Plan and Apply
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Terraform init
+        working-directory: terraform/environments/dev
+        run: terraform init
+
+      - name: Terraform plan
+        working-directory: terraform/environments/dev
+        run: terraform plan -no-color
+
+  terraform-apply:
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    environment: production-approval
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Terraform init
+        working-directory: terraform/environments/dev
+        run: terraform init
+
+      - name: Terraform apply
+        working-directory: terraform/environments/dev
+        run: terraform apply -auto-approve
