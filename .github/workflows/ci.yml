@@ -1,0 +1,36 @@
+name: CI - Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  terraform-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform fmt check
+        working-directory: terraform/environments/dev
+        run: terraform fmt -check -recursive
+
+      - name: Terraform init (sin backend real)
+        working-directory: terraform/environments/dev
+        run: terraform init -backend=false
+
+      - name: Terraform validate
+        working-directory: terraform/environments/dev
+        run: terraform validate
+
+  docker-build-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image (solo verificación, no se sube)
+        working-directory: serving-api
+        run: docker build -t credit-risk-api:ci-check .
