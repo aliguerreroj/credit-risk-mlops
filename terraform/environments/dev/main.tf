@@ -36,8 +36,8 @@ module "ecs" {
 }
 
 module "api_gateway" {
-  source          = "../../modules/api_gateway"
-  task_public_ip  = "3.88.20.175"
+  source         = "../../modules/api_gateway"
+  task_public_ip = "3.88.20.175"
 }
 
 module "lambda_drift_check" {
@@ -47,7 +47,7 @@ module "lambda_drift_check" {
 }
 
 module "eventbridge" {
-  source                = "../../modules/eventbridge"
-  lambda_function_arn   = module.lambda_drift_check.lambda_function_arn
-  lambda_function_name  = module.lambda_drift_check.lambda_function_name
+  source               = "../../modules/eventbridge"
+  lambda_function_arn  = module.lambda_drift_check.lambda_function_arn
+  lambda_function_name = module.lambda_drift_check.lambda_function_name
 }
